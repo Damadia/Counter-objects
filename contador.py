@@ -8,8 +8,8 @@ def neighborville(img, x, y):
     dt = np.dtype([('x', 'i8'), ('y', 'i8')])
     n = []
 
-    for i in range(-1,2):
-        for j in range(-1,2):
+    for i in [-1,0,1]:
+        for j in [-1,0,1]:
             if i + y < 0 or i + y >= h or j + x < 0 or j + x >= w:
                 continue
             n.append([i,j])
@@ -21,6 +21,8 @@ def bfs(v0, img, visited):
     
     q = queue.Queue()
     q.put(v0)
+
+
     while (not q.empty()):
         current_vertex = q.get()
         if visited[current_vertex[0],current_vertex[1]]:
@@ -30,10 +32,9 @@ def bfs(v0, img, visited):
             list_px_connected.append(current_vertex)
         neigh = neighborville(img, current_vertex[0], current_vertex[1])
         for v in neigh:
-            if visited[v[0],v[1]]:
+            if visited[v[0],v[1]] or img[v[0],v[1]] == 0:
                 continue
             q.put(v)
-    
     return list_px_connected
 
 
@@ -55,7 +56,7 @@ def contours(img):
     return c
 
 
-def amountContours(img, t=16):
+def amountContours(img, t=512):
     h,w = img.shape
     px_to_contours = (h*w)/t
     list_contours = contours(img)
@@ -83,6 +84,7 @@ def main():
     cv2.imshow( "Imagen contornos", imgContours)
     print("Cantidad de objetos en la imagen: ", a)
 
+    cv2.waitKey(0)
 
 if __name__ == "__main__":
     main()
